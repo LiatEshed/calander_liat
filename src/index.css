@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;600;700;800;900&family=Secular+One&family=Varela+Round&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Secular One", "Frank Ruhl Libre", serif;
+  --font-sans: "Varela Round", sans-serif;
+  
+  --color-vintage-bg: #F4F3EF;
+  --color-vintage-card: #FFFFFF;
+  --color-vintage-border: #E4E2DB;
+  --color-vintage-accent: #9A6F75; /* Elegant Dusty Rose / Pinkish-mauve */
+  --color-vintage-accent-hover: #7E565C;
+  --color-vintage-text: #32312D; /* Rich dark warm grey */
+  --color-vintage-text-muted: #74726B; /* Muted stone grey */
+  --color-vintage-sage: #81A381; /* Pastel Sage Green */
+  --color-vintage-blue: #7CA6BF; /* Pastel Light Blue */
+  --color-vintage-pink: #E89EAA; /* Pastel Pink */
+}
+
+/* Custom Vintage styles */
+body {
+  background-color: var(--color-vintage-bg);
+  color: var(--color-vintage-text);
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar Vintage styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #EAE8E2;
+}
+::-webkit-scrollbar-thumb {
+  background: #C8C5BB;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A6A398;
+}
+
+/* Elegant visual transitions */
+.transition-all-200 {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

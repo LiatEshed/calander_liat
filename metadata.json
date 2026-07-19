@@ -1,0 +1,6 @@
+{
+  "name": "Personal Hebrew Calendar and Task Manager",
+  "description": "A premium, RTL-oriented, mobile-first Hebrew calendar and task manager. Displays dual Gregorian and Hebrew dates, Shabbat parashat hashavua, holidays, hourly timelines, and drag-and-drop task scheduling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
