@@ -30,13 +30,21 @@ export default function App() {
 
   // Load from local storage or fall back to mock seeds
   const [events, setEvents] = useState<CalendarEvent[]>(() => {
-    const saved = localStorage.getItem('cal_events');
-    return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+    try {
+      const saved = localStorage.getItem('cal_events');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const saved = localStorage.getItem('cal_tasks');
-    return saved ? JSON.parse(saved) : INITIAL_TASKS;
+    try {
+      const saved = localStorage.getItem('cal_tasks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   // Modals state
@@ -44,20 +52,6 @@ export default function App() {
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
   const [modalDefaultStartTime, setModalDefaultStartTime] = useState('09:00');
   const [taskBeingScheduled, setTaskBeingScheduled] = useState<Task | null>(null);
-
-  // --- AUTO-RESET ON DEPLOY / VERSION FOR A CLEAN SLATE ---
-  useEffect(() => {
-    // If the user's localStorage contains old seed events (e.g. e1, or old Hebrew text),
-    // we force-clear it once so she gets a clean empty slate to insert her own.
-    const savedEvents = localStorage.getItem('cal_events');
-    const isOldSeed = savedEvents && (savedEvents.includes('"id":"e1"') || savedEvents.includes('ישיבת צוות'));
-    if (isOldSeed || !savedEvents) {
-      setEvents([]);
-      setTasks([]);
-      localStorage.setItem('cal_events', JSON.stringify([]));
-      localStorage.setItem('cal_tasks', JSON.stringify([]));
-    }
-  }, []);
 
   // --- PERSISTENCE ---
   useEffect(() => {

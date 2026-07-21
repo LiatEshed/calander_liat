@@ -202,6 +202,37 @@ export const HourlyDayView: React.FC<HourlyDayViewProps> = ({
         </div>
       </div>
 
+      {/* Zmanim Bar */}
+      {(selectedDateInfo.candleLighting || selectedDateInfo.havdalah || selectedDateInfo.fastStart || selectedDateInfo.fastEnd) && (
+        <div className="px-4 py-1.5 bg-[#FAF3E3]/55 border-b border-[#E6DCBF] flex flex-wrap gap-2 items-center" id="day-zmanim-bar">
+          <span className="text-[10px] font-serif font-bold text-[#736253] tracking-wide">זמני היום:</span>
+          {selectedDateInfo.candleLighting && (
+            <div className="px-2 py-0.5 bg-[#FFF9E6] text-[#A15B21] text-[11px] font-serif font-bold rounded-md border border-[#F5DFAB] flex items-center gap-1" id="zman-candles">
+              <span>🕯️ כניסת שבת/חג:</span>
+              <span className="font-mono">{selectedDateInfo.candleLighting}</span>
+            </div>
+          )}
+          {selectedDateInfo.havdalah && (
+            <div className="px-2 py-0.5 bg-[#ECECF6] text-[#4F4F82] text-[11px] font-serif font-bold rounded-md border border-[#D2D2E6] flex items-center gap-1" id="zman-havdalah">
+              <span>🌙 מוצאי שבת/חג:</span>
+              <span className="font-mono">{selectedDateInfo.havdalah}</span>
+            </div>
+          )}
+          {selectedDateInfo.fastStart && (
+            <div className="px-2 py-0.5 bg-[#FFF2EA] text-[#B1511B] text-[11px] font-serif font-bold rounded-md border border-[#F5DACB] flex items-center gap-1" id="zman-faststart">
+              <span>⏱️ תחילת הצום:</span>
+              <span className="font-mono">{selectedDateInfo.fastStart}</span>
+            </div>
+          )}
+          {selectedDateInfo.fastEnd && (
+            <div className="px-2 py-0.5 bg-[#EBF5F5] text-[#347A7B] text-[11px] font-serif font-bold rounded-md border border-[#D1ECEE] flex items-center gap-1" id="zman-fastend">
+              <span>🌙 צאת הצום:</span>
+              <span className="font-mono">{selectedDateInfo.fastEnd}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Multi-day Event Shelf */}
       {multiDayEvents.length > 0 && (
         <div className="px-4 py-2 bg-[#FAF3E3]/60 border-b border-[#E6DCBF] flex flex-col gap-1.5" id="multi-day-events-shelf">

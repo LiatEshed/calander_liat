@@ -161,6 +161,13 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
                 </span>
               </div>
 
+              {/* Friday Candle Lighting */}
+              {day.getDay() === 5 && dateInfo.candleLighting && currentM && (
+                <div className="text-[6px] sm:text-[7px] text-[#A15B21] bg-[#FFF9E6] rounded px-0.5 py-0.5 text-center mt-0.5 select-none leading-none border border-[#F5DFAB] flex items-center justify-center gap-0.5">
+                  <span>🕯️ {dateInfo.candleLighting}</span>
+                </div>
+              )}
+
               {/* Special Shabbat label (greenish pastel) */}
               {day.getDay() === 6 && currentM && (
                 <div className="text-[6.5px] sm:text-[7.5px] text-[#446F44] font-bold bg-[#EDF6ED] rounded px-0.5 py-0.5 text-center mt-0.5 select-none leading-tight border border-[#D2EAD2] flex flex-col gap-0.5">
@@ -169,6 +176,37 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
                     <span className="text-[5.5px] sm:text-[6.5px] text-[#2E542E] font-black truncate">
                       {dateInfo.parasha}
                     </span>
+                  )}
+                  {dateInfo.havdalah && (
+                    <span className="text-[5.5px] sm:text-[6.5px] text-[#4F4F82] font-semibold truncate leading-none mt-0.5">
+                      מוצ״ש: {dateInfo.havdalah}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Non-Friday Candle Lighting (Holiday Eve) */}
+              {day.getDay() !== 5 && dateInfo.candleLighting && currentM && (
+                <div className="text-[6px] sm:text-[7px] text-[#A15B21] bg-[#FFF9E6] rounded px-0.5 py-0.5 text-center mt-0.5 select-none leading-none border border-[#F5DFAB] flex items-center justify-center gap-0.5">
+                  <span>🕯️ {dateInfo.candleLighting}</span>
+                </div>
+              )}
+
+              {/* Non-Saturday Holiday Ends (Havdalah) */}
+              {day.getDay() !== 6 && dateInfo.havdalah && currentM && (
+                <div className="text-[6px] sm:text-[7px] text-[#4F4F82] bg-[#ECECF6] rounded px-0.5 py-0.5 text-center mt-0.5 select-none leading-none border border-[#D2D2E6] flex items-center justify-center gap-0.5">
+                  <span>🌙 {dateInfo.havdalah}</span>
+                </div>
+              )}
+
+              {/* Fast times in month cell */}
+              {((dateInfo.fastStart || dateInfo.fastEnd) && currentM) && (
+                <div className="text-[5.5px] sm:text-[6.5px] text-[#B1511B] bg-[#FFF2EA] rounded px-0.5 py-0.5 text-center mt-0.5 select-none leading-tight border border-[#F5DACB] flex flex-col gap-0.5">
+                  {dateInfo.fastStart && (
+                    <span className="truncate font-serif">צום: {dateInfo.fastStart}</span>
+                  )}
+                  {dateInfo.fastEnd && (
+                    <span className="truncate font-serif">צאת: {dateInfo.fastEnd}</span>
                   )}
                 </div>
               )}

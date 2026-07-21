@@ -36,4 +36,8 @@ export interface HebrewDateInfo {
   isShabbat: boolean;
   parasha?: string;
   holiday?: string;
+  candleLighting?: string;
+  havdalah?: string;
+  fastStart?: string;
+  fastEnd?: string;
 }

@@ -183,6 +183,13 @@ export const WeeklyView: React.FC<WeeklyViewProps> = ({
                 </div>
               </div>
 
+              {/* Friday Candle Lighting */}
+              {day.getDay() === 5 && dateInfo.candleLighting && (
+                <div className="mb-1 p-0.5 sm:p-1 bg-[#FFF9E6] border border-[#F5DFAB] rounded-md sm:rounded-xl text-[6.5px] sm:text-[8px] font-bold text-[#A15B21] text-center leading-none flex items-center justify-center gap-0.5">
+                  <span>🕯️ {dateInfo.candleLighting}</span>
+                </div>
+              )}
+
               {/* Special Shabbat Banner (only if Shabbat) */}
               {day.getDay() === 6 && (
                 <div className="mb-1 p-0.5 sm:p-1 bg-[#EDF6ED] border border-[#D2EAD2] rounded-md sm:rounded-xl text-[7px] sm:text-[8.5px] font-bold text-[#446F44] text-center leading-tight flex flex-col gap-0.5">
@@ -191,6 +198,37 @@ export const WeeklyView: React.FC<WeeklyViewProps> = ({
                     <span className="text-[6px] sm:text-[8px] font-black text-[#2E542E]">
                       {dateInfo.parasha}
                     </span>
+                  )}
+                  {dateInfo.havdalah && (
+                    <span className="text-[6px] sm:text-[8px] text-[#4F4F82] font-semibold">
+                      מוצש: {dateInfo.havdalah}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Non-Friday Candle Lighting (Holiday Eve) */}
+              {day.getDay() !== 5 && dateInfo.candleLighting && (
+                <div className="mb-1 p-0.5 sm:p-1 bg-[#FFF9E6] border border-[#F5DFAB] rounded-md sm:rounded-xl text-[6.5px] sm:text-[8px] font-bold text-[#A15B21] text-center leading-none flex items-center justify-center gap-0.5">
+                  <span>🕯️ {dateInfo.candleLighting}</span>
+                </div>
+              )}
+
+              {/* Non-Saturday Holiday Ends (Havdalah) */}
+              {day.getDay() !== 6 && dateInfo.havdalah && (
+                <div className="mb-1 p-0.5 sm:p-1 bg-[#ECECF6] border border-[#D2D2E6] rounded-md sm:rounded-xl text-[6.5px] sm:text-[8px] font-bold text-[#4F4F82] text-center leading-none flex items-center justify-center gap-0.5">
+                  <span>🌙 {dateInfo.havdalah}</span>
+                </div>
+              )}
+
+              {/* Fast times */}
+              {(dateInfo.fastStart || dateInfo.fastEnd) && (
+                <div className="mb-1 p-0.5 sm:p-1 bg-[#FFF2EA] border border-[#F5DACB] rounded-md sm:rounded-xl text-[6.5px] sm:text-[8px] font-bold text-[#B1511B] text-center leading-tight flex flex-col gap-0.5">
+                  {dateInfo.fastStart && (
+                    <span>צום: {dateInfo.fastStart}</span>
+                  )}
+                  {dateInfo.fastEnd && (
+                    <span>צאת: {dateInfo.fastEnd}</span>
                   )}
                 </div>
               )}

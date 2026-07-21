@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HDate, Sedra, HebrewCalendar } from '@hebcal/core';
+import { HDate, Sedra, HebrewCalendar, Location, Zmanim } from '@hebcal/core';
 import { HebrewDateInfo } from '../types';
 
 // Convert number to Hebrew numeral (e.g., 15 -> טו, 1 -> א׳, 16 -> טז, 24 -> כד)
@@ -136,15 +136,24 @@ const holidayTranslations: { [key: string]: string } = {
   "Rosh Chodesh": "ראש חודש",
   "Pesach": "פסח",
   "Pesach I": "פסח יום א׳",
-  "Pesach VII": "פסח שביעי של פסח",
+  "Pesach II": "פסח יום ב׳",
+  "Pesach III": "פסח יום ג׳ (חול המועד)",
+  "Pesach IV": "פסח יום ד׳ (חול המועד)",
+  "Pesach V": "פסח יום ה׳ (חול המועד)",
+  "Pesach VI": "פסח יום ו׳ (חול המועד)",
+  "Pesach VII": "שביעי של פסח",
+  "Pesach VIII": "אחרון של פסח",
   "Shavuot": "שבועות",
   "Shavuot I": "שבועות יום א׳",
+  "Shavuot II": "שבועות יום ב׳",
   "Rosh Hashana": "ראש השנה",
   "Rosh Hashana I": "ראש השנה יום א׳",
   "Rosh Hashana II": "ראש השנה יום ב׳",
   "Yom Kippur": "יום כיפור",
   "Sukkot": "סוכות",
   "Sukkot I": "סוכות יום א׳",
+  "Sukkot II": "סוכות יום ב׳",
+  "Sukkot Hoshanah Rabbah": "הושענא רבה",
   "Shmini Atzeret": "שמיני עצרת",
   "Simchat Torah": "שמחת תורה",
   "Chanukah": "חנוכה",
@@ -158,29 +167,63 @@ const holidayTranslations: { [key: string]: string } = {
   "Chanukah: 8 Candles": "חנוכה - נר שמיני",
   "Purim": "פורים",
   "Shushan Purim": "שושן פורים",
+  "Purim Katan": "פורים קטן",
+  "Shushan Purim Katan": "שושן פורים קטן",
   "Lag BaOmer": "ל״ג בעומר",
+  "Lag Ba'Omer": "ל״ג בעומר",
   "Tisha B'Av": "תשעה באב",
+  "Tish'a B'Av": "תשעה באב",
   "Tu BiShvat": "ט״ו בשבט",
+  "Tu Bi'Shvat": "ט״ו בשבט",
+  "Tu B'Shvat": "ט״ו בשבט",
   "Yom HaAtzma'ut": "יום העצמאות",
+  "Yom HaAtzmaut": "יום העצמאות",
   "Yom HaZikaron": "יום הזיכרון",
   "Yom HaShoah": "יום השואה",
   "Erev Pesach": "ערב פסח",
+  "Erev Shavuot": "ערב שבועות",
   "Erev Rosh Hashana": "ערב ראש השנה",
   "Erev Yom Kippur": "ערב יום כיפור",
   "Erev Sukkot": "ערב סוכות",
+  "Erev Shmini Atzeret": "ערב שמיני עצרת",
+  "Erev Simchat Torah": "ערב שמחת תורה",
+  "Erev Tisha B'Av": "ערב תשעה באב",
+  "Erev Tish'a B'Av": "ערב תשעה באב",
   "Fast of Esther": "תענית אסתר",
   "Fast of Gedaliah": "צום גדליה",
+  "Fast of Gedalya": "צום גדליה",
   "Asara B'Tevet": "עשרה בטבת",
+  "Asara BaTevet": "עשרה בטבת",
   "Shiva Asar B'Tamuz": "שבעה עשר בתמוז",
+  "Shiva Asar BaTamuz": "שבעה עשר בתמוז",
   "Yom Yerushalayim": "יום ירושלים",
-  "Tu B'Av": "ט״ו באב"
+  "Tu B'Av": "ט״ו באב",
+  "Tu BaAv": "ט״ו באב",
+  "Leil Selichot": "ליל סליחות",
+  "Yom HaZikaron laYitzhak Rabin": "יום הזיכרון ליצחק רבין",
+  "Yom HaAliyah": "יום העלייה",
+  "Sigd": "סיגד",
+  "Pesach Sheini": "פסח שני"
 };
 
 // Translate holiday names or fall back gracefully
 export function translateHoliday(desc: string): string {
-  // If there is an exact translation
+  // If there is an exact translation in our dictionary
   if (holidayTranslations[desc]) {
     return holidayTranslations[desc];
+  }
+  
+  // Normalize variations of common holidays
+  const cleanDesc = desc.replace(/\s*\(observed\)$/i, "").trim();
+  if (holidayTranslations[cleanDesc]) {
+    return holidayTranslations[cleanDesc];
+  }
+
+  // Handle prefix Erev
+  if (cleanDesc.startsWith("Erev ")) {
+    const base = cleanDesc.replace("Erev ", "").trim();
+    const translatedBase = holidayTranslations[base] || base;
+    return `ערב ${translatedBase}`;
   }
   
   // Handle matches for Chanukah candles
@@ -215,6 +258,15 @@ export function translateHoliday(desc: string): string {
   return desc;
 }
 
+function formatIsraeliTime(dateObj: Date): string {
+  return dateObj.toLocaleTimeString('he-IL', {
+    timeZone: 'Asia/Jerusalem',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+}
+
 export function getHebrewDateInfo(date: Date): HebrewDateInfo {
   try {
     const hdate = new HDate(date);
@@ -246,6 +298,20 @@ export function getHebrewDateInfo(date: Date): HebrewDateInfo {
 
     // Lookup holiday using HebrewCalendar
     let holiday: string | undefined;
+    let candleLighting: string | undefined;
+    let havdalah: string | undefined;
+    let fastStart: string | undefined;
+    let fastEnd: string | undefined;
+
+    let locationToUse: Location;
+    try {
+      // Sderot: Latitude 31.5222, Longitude 34.5961, Israel=true, elevation 90m
+      locationToUse = new Location(31.5222, 34.5961, true, 'Asia/Jerusalem', 'Sderot', 'IL', undefined, 90);
+    } catch (err) {
+      console.warn("Failed to construct Sderot location, falling back to Beer Sheva:", err);
+      locationToUse = Location.lookup('Beer Sheva')!;
+    }
+
     try {
       const options = {
         start: date,
@@ -253,16 +319,86 @@ export function getHebrewDateInfo(date: Date): HebrewDateInfo {
         israel: true,
         il: true,
         holidays: true,
+        location: locationToUse,
+        candlelighting: true,
       };
       const events = HebrewCalendar.calendar(options);
+
+      // 1. Extract Candle lighting and Havdalah
+      for (const ev of events) {
+        const desc = ev.getDesc();
+        if (desc === 'Candle lighting') {
+          if ((ev as any).eventTime) {
+            candleLighting = formatIsraeliTime((ev as any).eventTime);
+          }
+        } else if (desc === 'Havdalah') {
+          if ((ev as any).eventTime) {
+            havdalah = formatIsraeliTime((ev as any).eventTime);
+          }
+        }
+      }
+
       if (events && events.length > 0) {
         // filter for holidays or major events, ignore parashat hashavua if already fetched
         const holidayEvent = events.find(e => {
           const desc = e.getDesc();
-          return desc && !desc.toLowerCase().includes("shabbat") && !desc.toLowerCase().includes("parashat");
+          return desc && 
+            !desc.toLowerCase().includes("shabbat") && 
+            !desc.toLowerCase().includes("parashat") && 
+            desc !== 'Candle lighting' && 
+            desc !== 'Havdalah' &&
+            !desc.toLowerCase().includes("fast begins") &&
+            !desc.toLowerCase().includes("fast ends");
         });
         if (holidayEvent) {
           holiday = translateHoliday(holidayEvent.getDesc());
+        }
+      }
+
+      // 3. Fast days detection and calculation
+      let isMinorFast = false;
+      let isMajorFast = false;
+      let isErevMajorFast = false;
+
+      for (const ev of events) {
+        const mask = ev.getFlags();
+        if (mask & 256) { // flags.MINOR_FAST
+          isMinorFast = true;
+        }
+        if (mask & 16384) { // flags.MAJOR_FAST
+          isMajorFast = true;
+        }
+        const desc = ev.getDesc();
+        if (desc === 'Erev Yom Kippur' || desc === 'Erev Tish\'a B\'Av' || desc === 'Erev Tisha B\'Av') {
+          isErevMajorFast = true;
+        }
+      }
+
+      if (isMinorFast || isMajorFast || isErevMajorFast) {
+        const zman = new Zmanim(locationToUse, date, false);
+        if (isMinorFast) {
+          try {
+            const dawn = zman.alotHaShachar();
+            const tzeitFast = zman.tzeit(7.083);
+            if (dawn) fastStart = formatIsraeliTime(dawn);
+            if (tzeitFast) fastEnd = formatIsraeliTime(tzeitFast);
+          } catch (err) {
+            console.warn("Failed calculating minor fast zmanim:", err);
+          }
+        } else if (isErevMajorFast) {
+          try {
+            const shkiah = zman.sunset();
+            if (shkiah) fastStart = formatIsraeliTime(shkiah);
+          } catch (err) {
+            console.warn("Failed calculating erev major fast zmanim:", err);
+          }
+        } else if (isMajorFast) {
+          try {
+            const tzeitMajor = zman.tzeit(8.5);
+            if (tzeitMajor) fastEnd = formatIsraeliTime(tzeitMajor);
+          } catch (err) {
+            console.warn("Failed calculating major fast zmanim:", err);
+          }
         }
       }
     } catch (e) {
@@ -277,7 +413,11 @@ export function getHebrewDateInfo(date: Date): HebrewDateInfo {
       hebrewYearStr: yearHeb,
       isShabbat,
       parasha,
-      holiday
+      holiday,
+      candleLighting,
+      havdalah,
+      fastStart,
+      fastEnd
     };
   } catch (err) {
     console.error("Error creating HebrewDateInfo:", err);
